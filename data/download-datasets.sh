@@ -18,20 +18,20 @@ else
   echo "WESAD dataset already downloaded and extracted"
 fi
 
-#* Download and extract HCI dataset
-if [ ! -f "data/download/HCI.zip" ]; then
-  echo "Download the HCI dataset from (https://mahnob-db.eu/hci-tagging/) and place the zip file in the data/download/HCI folder"
-else
-  # Extract the dataset if it's not already extracted
-  if [ ! -d "data/raw/HCI" ]; then
-    mkdir -p data/raw/HCI
-    unzip -o data/download/HCI.zip -d data/raw/HCI
-  else
-    echo "HCI dataset already downloaded and extracted"
-  fi
-fi
+# #* Download and extract HCI dataset
+# if [ ! -f "data/download/HCI.zip" ]; then
+#   echo "Download the HCI dataset from (https://mahnob-db.eu/hci-tagging/) and place the zip file in the data/download/HCI folder"
+# else
+#   # Extract the dataset if it's not already extracted
+#   if [ ! -d "data/raw/HCI" ]; then
+#     mkdir -p data/raw/HCI
+#     unzip -o data/download/HCI.zip -d data/raw/HCI
+#   else
+#     echo "HCI dataset already downloaded and extracted"
+#   fi
+# fi
 
-#* Download and extract DREAMER dataset
-if [ ! -f "data/raw/dreamer/DREAMER.mat" ]; then
-  echo "Download the DREAMER dataset from (https://zenodo.org/records/546113) and place the mat file in the data/raw/dreamer folder"
-fi
+# #* Download and extract DREAMER dataset
+# if [ ! -f "data/raw/dreamer/DREAMER.mat" ]; then
+#   echo "Download the DREAMER dataset from (https://zenodo.org/records/546113) and place the mat file in the data/raw/dreamer folder"
+# fi

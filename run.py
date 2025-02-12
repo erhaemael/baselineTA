@@ -6,7 +6,7 @@ def main():
     # Save as environment variable for next scripts
     os.environ["BASE_PATH"] = script_path
     os.environ["VERSION"] = "v1"
-    os.environ["WANDB_USER"] = "erhaemael"
+    os.environ["WANDB_USER"] = "erhaemael-politeknik-negeri-bandung"
 
     # Run UniTS
     os.system("./src/models/UniTS/run.sh")
