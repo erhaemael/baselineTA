@@ -12,7 +12,7 @@ def main():
     os.system("./src/models/UniTS/run.sh")
 
     # Run UniTS with subsample
-    os.system("./src/models/UniTS/run_subsample.sh")
+    # os.system("./src/models/UniTS/run_subsample.sh")
     
 if __name__ == "__main__":
     main()

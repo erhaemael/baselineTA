@@ -7,6 +7,14 @@ import wandb
 from utils.ddp import is_main_process, init_distributed_mode
 import os
 
+# Mount Google Drive
+from google.colab import drive
+drive.mount('/content/drive')
+
+# Tentukan lokasi penyimpanan di Google Drive
+drive_checkpoint_path = "/content/drive/MyDrive/checkpoints"
+os.makedirs(drive_checkpoint_path, exist_ok=True)
+
 VERSION = os.getenv("VERSION", "none")
 WANDB_USER = os.getenv("WANDB_USER", "none")
 BVP_DATASETS = ["wesad"]
@@ -166,12 +174,20 @@ if __name__ == '__main__':
                         tags=tags
                     )
 
-                # Run the experiment
-                Exp = Exp_All_Task_SUP
+                # Cek apakah ada checkpoint yang bisa dimuat
+                checkpoint_filename = f"checkpoint_{args.task_name}_lr{lr}_fold{k}_{source}.pth"
+                checkpoint_path = os.path.join(args.checkpoints, checkpoint_filename)
+                drive_checkpoint_file = os.path.join(drive_checkpoint_path, checkpoint_filename)
+
+                exp = Exp_All_Task_SUP(args)
+
+                # Jika checkpoint ada, load model
+                if os.path.exists(checkpoint_path):
+                    print(f"Loading checkpoint: {checkpoint_path}")
+                    exp.model.load_state_dict(torch.load(checkpoint_path))
 
                 if args.is_training:
                     for ii in range(args.itr):
-                        # setting record of experiments
                         setting = '{}_{}_{}_{}_ft{}_dm{}_el{}_{}_{}'.format(
                             args.task_name,
                             args.model_id,
@@ -182,9 +198,17 @@ if __name__ == '__main__':
                             args.e_layers,
                             args.des, ii)
 
-                        exp = Exp(args)  # set experiments
-                        print('>>>>>>>start training : {}>>>>>>>>>>>>>>>>>>>>>>>>>>'.format(setting))
+                        print(f'>>>>>>> Start training: {setting} >>>>>>>>>>>>>>>>>>>>>>>>>>')
                         exp.train(setting)
+
+                    # Simpan checkpoint setelah training selesai
+                    torch.save(exp.model.state_dict(), checkpoint_path)
+                    print(f"Checkpoint saved at {checkpoint_path}")
+
+                    # Salin checkpoint ke Google Drive
+                    import shutil
+                    shutil.copy(checkpoint_path, drive_checkpoint_file)
+                    print(f"Checkpoint also saved to Google Drive at {drive_checkpoint_file}")
                 else:
                     ii = 0
                     setting = '{}_{}_{}_{}_ft{}_dm{}_el{}_{}_{}'.format(
@@ -197,7 +221,6 @@ if __name__ == '__main__':
                         args.e_layers,
                         args.des, ii)
 
-                    exp = Exp(args)  # set experiments
                     print('>>>>>>>testing : {}<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<'.format(setting))
                     exp.test(setting, load_pretrain=True)
                     torch.cuda.empty_cache()
