@@ -7,9 +7,6 @@ import wandb
 from utils.ddp import is_main_process, init_distributed_mode
 import os
 
-# Mount Google Drive
-from google.colab import drive
-drive.mount('/content/drive')
 
 # Tentukan lokasi penyimpanan di Google Drive
 drive_checkpoint_path = "/content/drive/MyDrive/checkpoints"
